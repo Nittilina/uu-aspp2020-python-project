@@ -3,8 +3,12 @@ import re
 
 start_str = "Excitation energies and oscillator strengths:"
 end_str = "SavETr:"
+
 state_regex = r"Excited State\s+(\d+):\s+(\S)\S*-(\S*)\s+(-?\d+\.\d+)\s+eV\s+(\d+\.\d+)\s+nm\s+f=(\d+\.\d+)\s+<S..2>=(\d+\.\d+)"
 transition_regex = r"(\d+) (<-|->) (\d+)\s+(-?\d+\.\d+)"
+
+p = re.compile(state_regex)
+k = re.compile(transition_regex)
 
 def parse_log(path):
     with open(path, 'r') as log:
@@ -20,14 +24,12 @@ def parse_state(state_data):
     lines = state_data.splitlines()
     header = lines[0]
 
-    p = re.compile(state_regex)
     x = p.match(header)
     es = models.ExcitedState(int(x.group(1)), x.group(2), x.group(3), float(x.group(4)), float(x.group(5)), float(x.group(6)), float(x.group(7)))
 
     transitions = lines[1:]
 
     for transition in transitions:
-        k = re.compile(transition_regex)
         y = k.match(transition.strip())
 
         if not y:
