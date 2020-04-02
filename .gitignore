@@ -1,2 +1,4 @@
 __pycache__
 *.pyc
+aim_out.csv
+aim_out_comma.csv
