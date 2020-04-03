@@ -3,7 +3,8 @@ from terminaltables import SingleTable
 from typing import List
 
 def render_excited_states(states):
-    titles = ["State", "E (eV)", "f", "Sym", "Orbitals", " Coeffs", "test"]
+    #titles = ["State", "E (eV)", "f", "Sym", "Orbitals", " Coeffs", "Transition\ntype", "Total\nconfiguration", "Comments           "]
+    titles = ["State", "E (eV)", "f", "Sym", "Orbitals", " Coeffs"]
     rows = [ es_to_row(state) for state in states ]
 
     table_data = [titles] + rows
@@ -11,6 +12,8 @@ def render_excited_states(states):
     table = SingleTable(table_data)
     table.inner_row_border = True
     table.inner_column_border = False
+    #table.justify_columns[6] = 'center'
+    #table.justify_columns[7] = 'center'
 
     print(table.table)
 
