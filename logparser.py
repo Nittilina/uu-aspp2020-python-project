@@ -4,13 +4,16 @@ import re
 start_str = "Excitation energies and oscillator strengths:"
 end_str = "SavETr:"
 
-state_regex = r"Excited State\s+(\d+):\s+(\S)\S*-(\S*)\s+(-?\d+\.\d+)\s+eV\s+(\d+\.\d+)\s+nm\s+f=(\d+\.\d+)\s+<S..2>=(\d+\.\d+)"
-transition_regex = r"(\d+) (<-|->) (\d+)\s+(-?\d+\.\d+)"
+state_pattern = r"Excited State\s+(\d+):\s+(\S)\S*-(\S*)\s+(-?\d+\.\d+)\s+eV\s+(\d+\.\d+)\s+nm\s+f=(\d+\.\d+)\s+<S..2>=(\d+\.\d+)"
+transition_pattern = r"(\d+) (<-|->) (\d+)\s+(-?\d+\.\d+)"
 
-p = re.compile(state_regex)
-k = re.compile(transition_regex)
+state_regex = re.compile(state_pattern)
+transition_regex = re.compile(transition_pattern)
 
 def parse_log(path):
+    """
+    Accepts the filename of a Gaussian log file and returns a list of excited states with associated data.
+    """
     with open(path, 'r') as log:
         contents = log.read()
         cut1 = contents.split(start_str)
@@ -20,17 +23,18 @@ def parse_log(path):
         excited_states = [ parse_state(x) for x in states ]
         return excited_states
 
+#Parses a single excited state and extracts the data into an ExcitedStates object.
 def parse_state(state_data):
     lines = state_data.splitlines()
     header = lines[0]
 
-    x = p.match(header)
+    x = state_regex.match(header)
     es = models.ExcitedState(int(x.group(1)), x.group(2), x.group(3), float(x.group(4)), float(x.group(5)), float(x.group(6)), float(x.group(7)))
 
     transitions = lines[1:]
 
     for transition in transitions:
-        y = k.match(transition.strip())
+        y = transition_regex.match(transition.strip())
 
         if not y:
             break
