@@ -1,6 +1,6 @@
 # Gaussian Excited State Logfile Parser
 
-Reads output files obtained from Gaussian calculations of excited states (using the keyword 'TD'). The script extracts the relevant data and prints it in the terminal as a table.
+Reads output files obtained from Gaussian calculations of excited states (using the keyword `TD`). The script extracts the relevant data and prints it in the terminal as a table.
 
 ## Usage
 
